@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">FormView</string>
+    <string name="action_settings">Settings</string>
+    <string name="search_an_ingredient">Select an ingredient</string>
+    <string name="title_activity_cocktail">CocktailActivity</string>
+</resources>
