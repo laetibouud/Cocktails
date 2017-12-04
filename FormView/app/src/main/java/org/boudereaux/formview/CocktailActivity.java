@@ -25,10 +25,14 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
 public class CocktailActivity extends AppCompatActivity {
+    int view; // 1 if regular, 2 if favourites, 3 if tasted
     ListView mListView;
+
+    String url_id="http://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=";
     String url_filter_alcohol="http://www.thecocktaildb.com/api/json/v1/1/filter.php?a=";
     String url_filter_cat="http://www.thecocktaildb.com/api/json/v1/1/filter.php?c=";
     String url_filter_ingredients="http://www.thecocktaildb.com/api/json/v1/1/filter.php?i=";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +40,22 @@ public class CocktailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cocktail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        SharedPreferences settings = getSharedPreferences("choices", 0);
+        view=settings.getInt("view",1);
+        if ((view==2) || (view==3)) {
+            Set<String> empty = new ArraySet<String>();
+            String li;
+            if (view==2) {
+                li = "favourites";
+            } else {
+                li = "favourites";
+            }
+            List<String> list_to_diplay = new ArrayList<String>(settings.getStringSet(li,empty));
+            List<Cocktail> cocktails = getFavOrTastCocktails(list_to_diplay);
+            CocktailAdapter adapter = new CocktailAdapter(CocktailActivity.this, cocktails);
+            mListView.setAdapter(adapter);
+        }
 
         mListView = (ListView) findViewById(R.id.listView);
 
@@ -74,6 +94,41 @@ public class CocktailActivity extends AppCompatActivity {
         }
 
         return drinks;
+    }
+
+    List<Cocktail> getFavOrTastCocktails(List<String> ids) {
+        List<Cocktail> list_cocktails = new ArrayList<Cocktail>();
+        for (int i=0;i<ids.size();i++) {
+            Cocktail cocktail = new Cocktail(getApplicationContext());
+            cocktail = getCocktailById(ids.get(i));
+            list_cocktails.add(cocktail);
+        }
+        return list_cocktails;
+    }
+
+    Cocktail getCocktailById(String id) {
+        String url=url_id + id;
+        Cocktail cocktail = new Cocktail();
+
+        HttpGetRequest request = new HttpGetRequest();
+        try {
+            String result = request.execute(url).get();
+            JSONObject jObject  = new JSONObject(result);
+            JSONArray drinks = jObject.getJSONArray("drinks"); // get data object
+            JSONObject drink = drinks.getJSONObject(0);
+
+            cocktail.setName(drink.getString("strDrink"));
+            cocktail.setId(drink.getString("idDrink"));
+            cocktail.setPicture(drink.getString("strDrinkThumb"));
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return cocktail;
     }
 
 
