@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 import java.util.concurrent.ExecutionException;
 
 public class CocktailActivity extends AppCompatActivity {
@@ -77,6 +79,7 @@ public class CocktailActivity extends AppCompatActivity {
 
     void createView() throws JSONException {
         List<JSONArray> cocktails_list = new ArrayList<JSONArray>();
+
         SharedPreferences settings = getSharedPreferences("choices", 0);
 
         TextView cat_view = (TextView)findViewById(R.id.cat);
@@ -181,15 +184,16 @@ public class CocktailActivity extends AppCompatActivity {
             txt_ing=txt_ing+ ing;
         }
         ingredients_description.setText(txt_ing);
-
+        final CocktailAdapter adapter;
+        List<Cocktail> lists = new ArrayList<Cocktail>();
         if (cocktails_alcohol_ing.isEmpty()) {
-            CocktailAdapter adapter = new CocktailAdapter(CocktailActivity.this, list_cat);
-            mListView.setAdapter(adapter);
+            lists=list_cat;
         } else {
-            List<Cocktail> real_list = getCocktailsFiltered(cocktails_alcohol_ing,list_cat);
-            CocktailAdapter adapter = new CocktailAdapter(CocktailActivity.this, real_list);
-            mListView.setAdapter(adapter);
+            lists = getCocktailsFiltered(cocktails_alcohol_ing,list_cat);
         }
+
+        adapter = new CocktailAdapter(CocktailActivity.this, lists);
+        mListView.setAdapter(adapter);
 
     }
 

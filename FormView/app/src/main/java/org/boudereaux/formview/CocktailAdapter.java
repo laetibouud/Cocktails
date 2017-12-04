@@ -5,6 +5,7 @@ package org.boudereaux.formview;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import static android.support.v4.content.ContextCompat.startActivity;
+
 
 public class CocktailAdapter extends ArrayAdapter<Cocktail> {
 
@@ -30,13 +33,12 @@ public class CocktailAdapter extends ArrayAdapter<Cocktail> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         final Cocktail cock = getItem(position);
 
-        Context context = parent.getContext();
+        final Context context = parent.getContext();
         final CocktailViewHolder viewHolder;
 
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_cocktail,parent, false);
             viewHolder = new CocktailViewHolder(convertView);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (CocktailViewHolder) convertView.getTag();
@@ -72,6 +74,15 @@ public class CocktailAdapter extends ArrayAdapter<Cocktail> {
                 CocktailAdapter.this.notifyDataSetChanged();
             }
         });
+
+        viewHolder.name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(),CocktailDescriptionActivity.class);
+                intent.putExtra("id", cock.getId());
+                view.getContext().startActivity(intent);
+            }
+        });
         return convertView;
     }
 
@@ -87,7 +98,6 @@ public class CocktailAdapter extends ArrayAdapter<Cocktail> {
             favorite = (Button) linha.findViewById(R.id.favorite);
             done = (Button) linha.findViewById(R.id.done);
         }
-
     }
 
 }

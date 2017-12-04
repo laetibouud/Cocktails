@@ -191,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
         RadioButton no_alcohol = (RadioButton) findViewById(R.id.no_alcohol_check);
 
         SharedPreferences settings = getSharedPreferences("choices", 0);
+
         SharedPreferences.Editor editor = settings.edit();
 
         if (selectedId == alcohol.getId()) {

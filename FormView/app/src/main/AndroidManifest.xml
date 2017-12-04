@@ -24,6 +24,10 @@
         <activity
             android:name=".CocktailActivity"
             android:label="@string/title_activity_cocktail"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CocktailDescriptionActivity"
+            android:label="@string/title_activity_cocktail_description"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
