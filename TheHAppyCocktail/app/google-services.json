@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "821428083496",
+    "firebase_url": "https://thehappycocktail-29a41.firebaseio.com",
+    "project_id": "thehappycocktail-29a41",
+    "storage_bucket": "thehappycocktail-29a41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821428083496:android:281b34706b6e451c",
+        "android_client_info": {
+          "package_name": "org.fer.thehappycocktail"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821428083496-4m1t95v8112etis8sai8k6524i9rg336.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.fer.thehappycocktail",
+            "certificate_hash": "27a833294bb468aedf5325851fa5b94f6d1412c4"
+          }
+        },
+        {
+          "client_id": "821428083496-thla6a0gp2e4kusreedi3p02n78pl84i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAQ_S3-QIjC9z_d2asYIcpuDkotKt18BqQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821428083496-thla6a0gp2e4kusreedi3p02n78pl84i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
