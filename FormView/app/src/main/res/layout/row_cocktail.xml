@@ -3,42 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:padding="10dp" >
 
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/text"
+
+    <Button
+        android:id="@+id/done"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        app:srcCompat="@drawable/ic_star" />
+        android:drawableLeft="@drawable/ic_check"
+        android:src="@drawable/ic_check"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="8sp" />
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_check"
+    <Button
+        android:id="@+id/favorite"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="60sp"
+        android:layout_height="60sp"
         android:layout_alignParentTop="true"
-        android:layout_toStartOf="@+id/imageView2"
-        android:layout_toLeftOf="@+id/imageView2" />
+        android:layout_toLeftOf="@+id/done"
+        android:layout_toStartOf="@+id/done"
+        android:drawableLeft="@drawable/ic_star"
+        android:src="@drawable/ic_star"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textSize="8sp" />
+
 
     <ImageView
         android:id="@+id/picture"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
         android:textAlignment="center"
         tools:background="#AAA" />
 
     <TextView
         android:id="@+id/Name"
         android:layout_width="wrap_content"
-        android:layout_height="60sp"
+        android:layout_height="60dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@+id/picture"
+        android:layout_toLeftOf="@+id/favorite"
+        android:layout_toRightOf="@+id/picture"
         android:gravity="center"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:textAlignment="viewStart"
         android:textColor="@android:color/darker_gray"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:textStyle="bold|italic"
         tools:text="Pseudo" />
 

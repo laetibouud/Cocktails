@@ -5,10 +5,12 @@ package org.boudereaux.formview;
  */
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,35 +27,67 @@ public class CocktailAdapter extends ArrayAdapter<Cocktail> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final Cocktail cock = getItem(position);
 
         Context context = parent.getContext();
+        final CocktailViewHolder viewHolder;
 
         if(convertView == null){
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_cocktail,parent, false);
-        }
+            viewHolder = new CocktailViewHolder(convertView);
 
-        CocktailViewHolder viewHolder = (CocktailViewHolder) convertView.getTag();
-        if(viewHolder == null){
-            viewHolder = new CocktailViewHolder();
-            viewHolder.name = (TextView) convertView.findViewById(R.id.Name);
-            viewHolder.picture = (ImageView) convertView.findViewById(R.id.picture);
             convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (CocktailViewHolder) convertView.getTag();
         }
 
-        //getItem(position) va récupérer l'item [position] de la List<Tweet> tweets
-        Cocktail cocktail = getItem(position);
 
-        //il ne reste plus qu'à remplir notre vue
-        viewHolder.name.setText(cocktail.getName());
-        Picasso.with(context).load(cocktail.getPicture()).into(viewHolder.picture);
+        viewHolder.name.setText(cock.getName());
+        Picasso.with(context).load(cock.getPicture()).into(viewHolder.picture);
 
+        if (cock.isFav()) {
+            viewHolder.favorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star_yellow,0,0,0);
+        } else {
+            viewHolder.favorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_star,0,0,0);
+        }
+
+        if (cock.isDone()) {
+
+            viewHolder.done.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_green,0,0,0);
+        } else {
+            viewHolder.done.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check,0,0,0);
+        }
+
+        viewHolder.favorite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cock.setFav(!cock.isFav());
+                CocktailAdapter.this.notifyDataSetChanged();
+            }
+        });
+
+        viewHolder.done.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                cock.setDone(!cock.isDone());
+                CocktailAdapter.this.notifyDataSetChanged();
+            }
+        });
         return convertView;
     }
 
     public class CocktailViewHolder {
         public TextView name;
         public ImageView picture;
+        public Button favorite;
+        public Button done;
+
+        CocktailViewHolder(View linha) {
+            name= (TextView) linha.findViewById(R.id.Name);
+            picture = (ImageView) linha.findViewById(R.id.picture );
+            favorite = (Button) linha.findViewById(R.id.favorite);
+            done = (Button) linha.findViewById(R.id.done);
+        }
+
     }
 
 }

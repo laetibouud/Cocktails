@@ -16,8 +16,27 @@ public class Cocktail {
     private String picture;
     private List<String> ingredients;
     private List<String> measures;
+    private boolean fav;
 
-    public Cocktail(String id, String name, String category, String alcohol, String instructions, String picture, List<String> ingredients, List<String> measures) {
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    private boolean done;
+
+    public boolean isFav() {
+        return fav;
+    }
+
+    public void setFav(boolean fav) {
+        this.fav = fav;
+    }
+
+    public Cocktail(boolean done,boolean fav,String id, String name, String category, String alcohol, String instructions, String picture, List<String> ingredients, List<String> measures) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -26,6 +45,8 @@ public class Cocktail {
         this.picture = picture;
         this.ingredients = ingredients;
         this.measures = measures;
+        this.fav = fav;
+        this.done = done;
     }
 
     public Cocktail() {

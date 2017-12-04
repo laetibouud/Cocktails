@@ -1,5 +1,6 @@
 package org.boudereaux.formview;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,7 +38,7 @@ public class CocktailActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
 
         try {
-            createList();
+            createView();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -72,65 +74,115 @@ public class CocktailActivity extends AppCompatActivity {
         return drinks;
     }
 
-    void createList() throws JSONException {
-        List<JSONArray> cocktails_list = new ArrayList<JSONArray>();
 
+    void createView() throws JSONException {
+        List<JSONArray> cocktails_list = new ArrayList<JSONArray>();
         SharedPreferences settings = getSharedPreferences("choices", 0);
 
-        boolean cocktail_cat = settings.getBoolean("Cocktail",true);
-        if (cocktail_cat) {
+        TextView cat_view = (TextView)findViewById(R.id.cat);
+        List<String> text_cat = new ArrayList<String>();
+
+        boolean all_kind=settings.getBoolean("all_kind",false);
+        String txt = "";
+        if (all_kind) {
+            txt = "Any kind of drinks";
+            Log.i("ALLKIND",txt);
             JSONArray cocktail_cat_list = getCocktailsByFilter(url_filter_cat+"Cocktail");
             cocktails_list.add(cocktail_cat_list);
-        }
-        boolean shot_cat = settings.getBoolean("Shot",true);
-        if (shot_cat) {
             JSONArray list = getCocktailsByFilter(url_filter_cat+"Shot");
             cocktails_list.add(list);
-        }
-        boolean beer_cat = settings.getBoolean("Beer",true);
-        if (beer_cat) {
-            JSONArray list = getCocktailsByFilter(url_filter_cat+"Beer");
+            list = getCocktailsByFilter(url_filter_cat+"Beer");
             cocktails_list.add(list);
-        }
-        boolean ordinary_cat = settings.getBoolean("Ordinary Drink",true);
-        if (ordinary_cat) {
-            JSONArray list = getCocktailsByFilter(url_filter_cat+"Ordinary_Drink");
+            list = getCocktailsByFilter(url_filter_cat+"Milk_/_Float_/_Shake");
             cocktails_list.add(list);
-        }
-        boolean milk_cat = settings.getBoolean("Milk / Float / Shake",true);
-        if (milk_cat) {
-            JSONArray list = getCocktailsByFilter(url_filter_cat+"Milk_/_Float_/_Shake");
+            list = getCocktailsByFilter(url_filter_cat+"Punch_/_Party_Drink");
             cocktails_list.add(list);
-        }
-        boolean punch_cat = settings.getBoolean("Punch / Party Drink",true);
-        if (punch_cat) {
-            JSONArray list = getCocktailsByFilter(url_filter_cat+"Punch_/_Party_Drink");
+            list = getCocktailsByFilter(url_filter_cat+"Ordinary_Drink");
             cocktails_list.add(list);
+        } else {
+
+            boolean cocktail_cat = settings.getBoolean("Cocktail",true);
+            if (cocktail_cat) {
+                JSONArray cocktail_cat_list = getCocktailsByFilter(url_filter_cat+"Cocktail");
+                cocktails_list.add(cocktail_cat_list);
+                JSONArray list_ordinary = getCocktailsByFilter(url_filter_cat+"Ordinary_Drink");
+                cocktails_list.add(list_ordinary);
+                text_cat.add("Cocktail");
+            }
+            boolean shot_cat = settings.getBoolean("Shot",true);
+            if (shot_cat) {
+                JSONArray list = getCocktailsByFilter(url_filter_cat+"Shot");
+                cocktails_list.add(list);
+                text_cat.add("Shot");
+            }
+            boolean beer_cat = settings.getBoolean("Beer",true);
+            if (beer_cat) {
+                JSONArray list = getCocktailsByFilter(url_filter_cat+"Beer");
+                cocktails_list.add(list);
+                text_cat.add("Beer");
+            }
+
+            boolean milk_cat = settings.getBoolean("Milk / Float / Shake",true);
+            if (milk_cat) {
+                JSONArray list = getCocktailsByFilter(url_filter_cat+"Milk_/_Float_/_Shake");
+                cocktails_list.add(list);
+                text_cat.add("Milk");
+            }
+            boolean punch_cat = settings.getBoolean("Punch / Party Drink",true);
+            if (punch_cat) {
+                JSONArray list = getCocktailsByFilter(url_filter_cat+"Punch_/_Party_Drink");
+                cocktails_list.add(list);
+                text_cat.add("Punch");
+            }
+            for (int i=0; i<text_cat.size()-1; i++) {
+                txt = txt + text_cat.get(i) + ", ";
+            }
+            txt = txt + text_cat.get(text_cat.size()-1);
+
         }
         List<Cocktail> list_cat = getCocktails(cocktails_list);
+        cat_view.setText(txt);
 
+
+        TextView alcohol_description = (TextView)findViewById(R.id.alcohol);
+        String txt_alcohol = "";
         List<JSONArray> cocktails_alcohol_ing = new ArrayList<JSONArray>();
-
         String alcohol = settings.getString("alcohol","");
-        Log.i("alcohol",alcohol);
         if (!alcohol.equals("")) {
             JSONArray list = getCocktailsByFilter(url_filter_alcohol+alcohol);
             cocktails_alcohol_ing.add(list);
+            if (alcohol=="Alcoholic") {
+                txt_alcohol = "With";
+            } else {
+                txt_alcohol= "Without";
+            }
+        } else {
+            txt_alcohol="With or without";
         }
+        alcohol_description.setText(txt_alcohol);
 
+
+        TextView ingredients_description=(TextView)findViewById(R.id.ingredients);
+        String txt_ing = "";
         Set<String> ingredients = new ArraySet<String>();
         List<String> list_ingredients = new ArrayList<>(settings.getStringSet("Ingredients",ingredients));
         int size = list_ingredients.size();
-
-        for (int i=0;i<size;i++) {
-            String ing = list_ingredients.get(i);
+        if (size==0) txt_ing="Any ingredients";
+        else {
+            for (int i=0;i<size-1;i++) {
+                String ing = list_ingredients.get(i);
+                JSONArray list = getCocktailsByFilter(url_filter_ingredients+ing);
+                cocktails_alcohol_ing.add(list);
+                txt_ing=txt_ing+ ing + ", ";
+            }
+            String ing = list_ingredients.get(size-1);
             JSONArray list = getCocktailsByFilter(url_filter_ingredients+ing);
             cocktails_alcohol_ing.add(list);
-            Log.i("ingredient",ing);
+            txt_ing=txt_ing+ ing;
         }
+        ingredients_description.setText(txt_ing);
 
         if (cocktails_alcohol_ing.isEmpty()) {
-            Log.i("size list", Integer.toString(list_cat.size()));
             CocktailAdapter adapter = new CocktailAdapter(CocktailActivity.this, list_cat);
             mListView.setAdapter(adapter);
         } else {
@@ -157,7 +209,8 @@ public class CocktailActivity extends AppCompatActivity {
                     cock.setId(drink.getString("idDrink"));
                     cock.setName(drink.getString("strDrink"));
                     cock.setPicture(drink.getString("strDrinkThumb"));
-                    Log.i("cock1", cock.getName());
+                    cock.setFav(false);
+                    cock.setDone(false);
                     cocktails.add(cock);
                 }
             }
@@ -171,10 +224,8 @@ public class CocktailActivity extends AppCompatActivity {
         List<Cocktail> cocktails = new ArrayList<Cocktail>();
 
         int size_request_cocktails = init_list.size();
-        Log.i("List drinks alcohol",Integer.toString(size_list));
         for (int j=0; j<size_request_cocktails; j++) {
             String drink_id = init_list.get(j).getId();
-            Log.i("drink_id",drink_id);
             boolean exist_in_list = true;
             for (int i=0;i<size_list;i++) {
                 boolean exist_in_object=false;
@@ -191,10 +242,14 @@ public class CocktailActivity extends AppCompatActivity {
 
             if (exist_in_list) {
                 cocktails.add(init_list.get(j));
-                Log.i("cock2", init_list.get(j).getName());
             }
         }
         return cocktails;
+    }
+
+    public void onEdit(View v) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
 }

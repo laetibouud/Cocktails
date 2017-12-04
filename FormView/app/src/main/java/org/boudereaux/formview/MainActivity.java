@@ -182,65 +182,62 @@ public class MainActivity extends AppCompatActivity {
         CheckBox shot_cat = (CheckBox)findViewById(R.id.shot_cat);
         CheckBox beer_cat = (CheckBox)findViewById(R.id.beer_cat);
         CheckBox punch_cat = (CheckBox)findViewById(R.id.punch_cat);
-        CheckBox ordinary_cat = (CheckBox)findViewById(R.id.ordinary_cat);
         CheckBox milk_cat = (CheckBox)findViewById(R.id.milk_cat);
 
         RadioGroup radio_alcohol = (RadioGroup) findViewById(R.id.radio_alcohol);
         int selectedId = radio_alcohol.getCheckedRadioButtonId();
 
-        RadioButton anyway = (RadioButton) findViewById(R.id.anyway);
         RadioButton alcohol = (RadioButton) findViewById(R.id.alcohol_check);
         RadioButton no_alcohol = (RadioButton) findViewById(R.id.no_alcohol_check);
 
         SharedPreferences settings = getSharedPreferences("choices", 0);
         SharedPreferences.Editor editor = settings.edit();
 
-        if (selectedId == anyway.getId()) {
-            editor.putString("alcohol", "");
-        } else if (selectedId == alcohol.getId()) {
+        if (selectedId == alcohol.getId()) {
             editor.putString("alcohol","Alcoholic");
-        } else {
+        } else if (selectedId == no_alcohol.getId()){
             editor.putString("alcohol","Non_alcoholic");
+        } else {
+            editor.putString("alcohol","");
         }
 
-        if (cocktail_cat.isChecked()) {
-            editor.putBoolean("Cocktail",true);
+        if ((cocktail_cat.isChecked() && punch_cat.isChecked() && milk_cat.isChecked() && beer_cat.isChecked() && shot_cat.isChecked()) ||
+                (!cocktail_cat.isChecked() && !punch_cat.isChecked() && !milk_cat.isChecked() && !beer_cat.isChecked() && !shot_cat.isChecked())) {
+            editor.putBoolean("all_kind",true);
         } else {
-            editor.putBoolean("Cocktail",false);
-        }
+            editor.putBoolean("all_kind",false);
+            if (cocktail_cat.isChecked()) {
+                editor.putBoolean("Cocktail",true);
+            } else {
+                editor.putBoolean("Cocktail",false);
+            }
 
-        if (ordinary_cat.isChecked()) {
-            editor.putBoolean("Ordinary Drink",true);
-        } else {
-            editor.putBoolean("Ordinary Drink",false);
-        }
-
-
-        if (milk_cat.isChecked()) {
-            editor.putBoolean("Milk / Float / Shake",true);
-        } else {
-            editor.putBoolean("Milk / Float / Shake",false);
-        }
+            if (milk_cat.isChecked()) {
+                editor.putBoolean("Milk / Float / Shake",true);
+            } else {
+                editor.putBoolean("Milk / Float / Shake",false);
+            }
 
 
-        if (beer_cat.isChecked()) {
-            editor.putBoolean("Beer",true);
-        } else {
-            editor.putBoolean("Beer",false);
-        }
+            if (beer_cat.isChecked()) {
+                editor.putBoolean("Beer",true);
+            } else {
+                editor.putBoolean("Beer",false);
+            }
 
 
-        if (shot_cat.isChecked()) {
-            editor.putBoolean("Shot",true);
-        } else {
-            editor.putBoolean("Shot",false);
-        }
+            if (shot_cat.isChecked()) {
+                editor.putBoolean("Shot",true);
+            } else {
+                editor.putBoolean("Shot",false);
+            }
 
 
-        if (punch_cat.isChecked()) {
-            editor.putBoolean("Punch / Party Drink",true);
-        } else {
-            editor.putBoolean("Punch / Party Drink",false);
+            if (punch_cat.isChecked()) {
+                editor.putBoolean("Punch / Party Drink",true);
+            } else {
+                editor.putBoolean("Punch / Party Drink",false);
+            }
         }
 
         Set<String> ingredients = new ArraySet<String>(ingredients_chosen);
